@@ -1,0 +1,27 @@
+doctrine:
+    dbal:
+        url: '%env(resolve:DATABASE_URL)%'
+
+        # IMPORTANT: You MUST configure your server version,
+        # either here or in the DATABASE_URL env var (see .env file)
+        #server_version: '13'
+    orm:
+        auto_generate_proxy_classes: true
+        naming_strategy: doctrine.orm.naming_strategy.underscore_number_aware
+        auto_mapping: true
+        mappings:
+            App:
+                is_bundle: false
+                type: annotation
+                dir: '%kernel.project_dir%/src/Entity'
+                prefix: 'App\Entity'
+                alias: App
+        dql:
+            # More config at https://github.com/beberlei/DoctrineExtensions/blob/master/config/mysql.yml
+            datetime_functions:
+                date: DoctrineExtensions\Query\Mysql\Date
+                dateadd: DoctrineExtensions\Query\Mysql\DateAdd
+                datesub: DoctrineExtensions\Query\Mysql\DateSub
+                weekday: DoctrineExtensions\Query\Mysql\WeekDay
+                day: DoctrineExtensions\Query\Mysql\Day
+
