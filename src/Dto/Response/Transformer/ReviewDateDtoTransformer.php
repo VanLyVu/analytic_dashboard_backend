@@ -4,18 +4,23 @@ declare(strict_types=1);
 
 namespace App\Dto\Response\Transformer;
 
+use App\Common\ReviewDate;
 use App\Dto\Response\ReviewDateDto;
 
 class ReviewDateDtoTransformer extends AbstractResponseDtoTransformer
 {
 
-    public function transformFromObject($data): ReviewDateDto
+    /**
+     * @param ReviewDate $reviewDate
+     * @return ReviewDateDto
+     */
+    public function transformFromObject($reviewDate): ReviewDateDto
     {
         $reviewDateDto = new ReviewDateDto();
 
-        $reviewDateDto->date = $data['date'];
-        $reviewDateDto->review_count = $data['review_count'];
-        $reviewDateDto->average_score = is_null($data['average_score']) ? null : (float) $data['average_score'];
+        $reviewDateDto->date = $reviewDate->date;
+        $reviewDateDto->review_count = $reviewDate->reviewCount;
+        $reviewDateDto->average_score = $reviewDate->averageScore;
 
         return $reviewDateDto;
     }

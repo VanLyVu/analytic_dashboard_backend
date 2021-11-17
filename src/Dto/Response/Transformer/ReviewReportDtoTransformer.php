@@ -4,15 +4,12 @@ declare(strict_types=1);
 
 namespace App\Dto\Response\Transformer;
 
-use App\Dto\Request\HotelReportFilterRequest;
+use App\Common\ReviewReport;
 use App\Dto\Response\ReviewReportDto;
 use App\Utils\Constants;
 
 class ReviewReportDtoTransformer extends AbstractResponseDtoTransformer
 {
-    /** @var HotelReportFilterRequest */
-    private HotelReportFilterRequest $hotelReportFilterRequest;
-
     private ReviewDateDtoTransformer $reviewDateDtoTransformer;
 
     public function __construct(ReviewDateDtoTransformer $reviewDateDtoTransformer)
@@ -20,26 +17,19 @@ class ReviewReportDtoTransformer extends AbstractResponseDtoTransformer
         $this->reviewDateDtoTransformer = $reviewDateDtoTransformer;
     }
 
-    public function transformFromObject($data)
+    /**
+     * @param ReviewReport $reviewReport
+     * @return ReviewReportDto
+     */
+    public function transformFromObject($reviewReport)
     {
-        if (is_null($this->hotelReportFilterRequest)) {
-            return [];
-        }
-
         $reviewReportDto = new ReviewReportDto();
-        $reviewReportDto->hotel_id = $this->hotelReportFilterRequest->hotelId;
-        $reviewReportDto->date_from = $this->hotelReportFilterRequest->dateFrom->format(Constants::DATE_FORMAT);
-        $reviewReportDto->date_to = $this->hotelReportFilterRequest->dateTo->format(Constants::DATE_FORMAT);
-        $reviewReportDto->date_group = $this->hotelReportFilterRequest->dateGroup;
-        $reviewReportDto->review_dates = $this->reviewDateDtoTransformer->transformFromObjects($data);
+        $reviewReportDto->hotel_id = $reviewReport->hotelId;
+        $reviewReportDto->date_from = $reviewReport->dateFrom->format(Constants::DATE_FORMAT);
+        $reviewReportDto->date_to = $reviewReport->dateTo->format(Constants::DATE_FORMAT);
+        $reviewReportDto->date_group = $reviewReport->dateGroup;
+        $reviewReportDto->review_dates = $this->reviewDateDtoTransformer->transformFromObjects($reviewReport->reviewDates);
 
         return $reviewReportDto;
-    }
-
-    public function setHotelReportFilterRequest(HotelReportFilterRequest $hotelReportFilterRequest): self
-    {
-        $this->hotelReportFilterRequest = $hotelReportFilterRequest;
-
-        return $this;
     }
 }

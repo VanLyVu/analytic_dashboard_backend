@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Service;
 
+use App\Common\ReviewDate;
+use App\Common\ReviewReport;
 use App\Dto\Request\HotelReportFilterRequest;
 use App\Dto\Response\HotelDto;
 use App\Dto\Response\ReviewReportDto;
@@ -59,59 +61,52 @@ class HotelReportService
      */
     public function getHotelReport(HotelReportFilterRequest $hotelReportFilterRequest): ReviewReportDto
     {
-        $reviewReportData = $this->reviewRepository->filterBy($hotelReportFilterRequest);
+        $reviewDates = $this->reviewRepository->filterBy($hotelReportFilterRequest);
+        $reviewReport = ReviewReport::createFromRequest($hotelReportFilterRequest);
 
-        $reviewReportData = $this->fillEmptyReport($reviewReportData, $hotelReportFilterRequest);
+        $reviewDates = $this->fillEmptyReport($reviewDates, $reviewReport);
+        $reviewReport->setReviewDate($reviewDates);
 
-        return $this->reviewReportDtoTransformer
-            ->setHotelReportFilterRequest($hotelReportFilterRequest)
-            ->transformFromObject($reviewReportData);
+        return $this->reviewReportDtoTransformer->transformFromObject($reviewReport);
     }
 
     /**
-     * @param array $reviewReportData
-     * @param HotelReportFilterRequest $hotelReportFilterRequest
-     * @return array
+     * @param ReviewDate[] $reviewReportData
+     * @param ReviewReport $reviewReport
+     * @return ReviewDate[]
      * @throws \Exception
      */
-    private function fillEmptyReport(array $reviewReportData, HotelReportFilterRequest $hotelReportFilterRequest): array
+    public function fillEmptyReport(array $reviewReportData, ReviewReport $reviewReport): array
     {
         $dataIndex = 0;
         $outputData = [];
 
-        $dateFrom = $hotelReportFilterRequest->dateFrom;
-        $timeInterval = "P1D";
-        switch ($hotelReportFilterRequest->dateGroup) {
-            case ReportDateGroup::WEEKLY:
-                $dateFrom = DateTimeUtils::firstDayOfWeek($dateFrom);
-                $timeInterval = "P7D";
-                break;
-            case ReportDateGroup::MONTHLY:
-                $dateFrom = DateTimeUtils::firstDayOfMonth($dateFrom);
-                $timeInterval = "P1M";
-        }
-
         /** @var DateTime $dateFromCopy */
         /** @var DateTime $dateToCopy */
-        [$dateFromCopy, $dateToCopy] = DateTimeUtils::cloneAndResetTime($dateFrom, $hotelReportFilterRequest->dateTo);
+        [$dateFromCopy, $dateToCopy] = DateTimeUtils::cloneAndResetTime(
+            $reviewReport->getDateGroupStartDate($reviewReport->dateGroup, $reviewReport->dateFrom),
+            $reviewReport->dateTo
+        );
 
         while (0 <= DateTimeUtils::daysDiff($dateToCopy, $dateFromCopy)) {
             $data = isset($reviewReportData[$dataIndex]) ? $reviewReportData[$dataIndex] : null;
 
-            if ($data && DateTimeUtils::daysDiff(new DateTime($data['date']), $dateFromCopy) == 0) {
+            if ($data && DateTimeUtils::daysDiff(new DateTime($data->date), $dateFromCopy) == 0) {
                 $outputData[] = $data;
                 $dataIndex++;
             } else {
-                $outputData[] = [
-                    "hotel_id" => $hotelReportFilterRequest->hotelId,
-                    "date" => $dateFromCopy->format(Constants::DATE_FORMAT),
-                    "review_count" => 0,
-                    "average_score" => null
-                ];
+                $outputData[] = new ReviewDate(
+                    $reviewReport->hotelId,
+                    $dateFromCopy->format(Constants::DATE_FORMAT)
+                );
             }
-            $dateFromCopy->add(new DateInterval($timeInterval));
+            $dateFromCopy->add(
+                $reviewReport->getDateGroupInterval($reviewReport->dateGroup)
+            );
         }
 
         return $outputData;
     }
+
+
 }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
+use App\Common\ReviewDate;
 use App\Dto\Request\HotelReportFilterRequest;
 use App\Entity\Review;
 use App\Enum\ReportDateGroup;
@@ -23,9 +24,13 @@ class ReviewRepository extends ServiceEntityRepository
         parent::__construct($registry, Review::class);
     }
 
-    public function filterBy(HotelReportFilterRequest $hotelReportFilterRequest)
+    /**
+     * @param HotelReportFilterRequest $hotelReportFilterRequest
+     * @return ReviewDate[]
+     */
+    public function filterBy(HotelReportFilterRequest $hotelReportFilterRequest): array
     {
-        return $this->createQueryBuilder('r')
+        $query = $this->createQueryBuilder('r')
             ->select(
                 'IDENTITY(r.hotel) as hotel_id',
                 $this->selectDateQueryForReport($hotelReportFilterRequest->dateGroup),
@@ -41,8 +46,21 @@ class ReviewRepository extends ServiceEntityRepository
             ->groupBy('r.hotel')
             ->addGroupBy('date')
             ->orderBy('date', 'ASC')
-            ->getQuery()
-            ->getResult();
+            ->getQuery();
+
+        $reviewDates = [];
+
+        foreach ($query->toIterable() as $record) {
+            $reviewDates[] = new ReviewDate(
+                (int) $record['hotel_id'],
+                $record['date'],
+                (int) $record['review_count'],
+                (float) $record['average_score']
+            );
+        }
+
+        return $reviewDates;
+
     }
 
     private function selectDateQueryForReport(string $dateGroup): string
