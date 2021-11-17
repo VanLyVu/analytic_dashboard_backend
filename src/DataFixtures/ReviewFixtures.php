@@ -14,6 +14,7 @@ use Faker\Factory;
 class ReviewFixtures extends Fixture implements OrderedFixtureInterface
 {
     private HotelRepository $hotelRepository;
+
     public function __construct(HotelRepository $hotelRepository)
     {
         $this->hotelRepository = $hotelRepository;

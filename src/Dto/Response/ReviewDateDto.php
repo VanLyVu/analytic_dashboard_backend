@@ -21,7 +21,7 @@ class ReviewDateDto
     /**
      * @Serialization\Type("int")
      */
-    public float $average_score;
+    public ?float $average_score;
 
 
 }

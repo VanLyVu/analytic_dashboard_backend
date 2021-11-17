@@ -1,6 +1,6 @@
 <?php
 
-//declare(strict_types=1);
+declare(strict_types=1);
 
 namespace App\Controller;
 
@@ -17,6 +17,7 @@ class HotelReportController extends AbstractController
      * @var HotelReportService $hotelReportService
      */
     private HotelReportService $hotelReportService;
+
     public function __construct(HotelReportService $hotelReportService)
     {
         $this->hotelReportService = $hotelReportService;
@@ -25,9 +26,11 @@ class HotelReportController extends AbstractController
     /**
      * @Route("/api/hotel_reports/hotels", name="hotel_report_hotels")
      */
-    public function index(): Response
+    public function hotels(): Response
     {
-        return $this->json($this->hotelReportService->getHotels());
+        return $this->json(
+            $this->hotelReportService->getHotels()
+        );
     }
 
     /**
