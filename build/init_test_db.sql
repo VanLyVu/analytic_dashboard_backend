@@ -1,0 +1,4 @@
+DROP DATABASE IF EXISTS analytic_test;
+CREATE DATABASE analytic_test CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
+GRANT ALL PRIVILEGES ON analytic_test.* TO 'analytic'@'%' WITH GRANT OPTION;
+FLUSH PRIVILEGES;
