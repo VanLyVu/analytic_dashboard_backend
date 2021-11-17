@@ -35,7 +35,9 @@ $ docker exec vvly-backend-php composer install
 ```
 $ docker exec -it vvly-backend-php bash
 $ bin/console doctrine:migrations:migrate
+choose yes
 $ bin/console doctrine:fixtures:load
+choose yes
 $ exit
 ```
 
