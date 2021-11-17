@@ -4,7 +4,7 @@ services:
   php-fpm:
     platform: linux/x86_64
     build: ./build/php-fpm
-    container_name: backend-php
+    container_name: vvly-backend-php
     hostname: backend-php
     volumes:
       - ./:/var/www
@@ -16,7 +16,7 @@ services:
   nginx:
     platform: linux/x86_64
     build: ./build/nginx
-    container_name: backend-nginx
+    container_name: vvly-backend-nginx
     hostname: backend-nginx
     volumes:
       - ./logs/nginx/:/var/log/nginx
@@ -28,7 +28,7 @@ services:
     restart: always
   db:
     platform: linux/x86_64
-    container_name: mysql8
+    container_name: vvly-backend-db
     hostname: db
     image: mysql:8.0
     command: mysqld --default-authentication-plugin=mysql_native_password --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
