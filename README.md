@@ -64,5 +64,7 @@ docker exec backend-php ./vendor/bin/phpunit
 go to browser/Postman and check 2 api below:
 
 http://127.0.0.1:8000/api/hotel_reports/hotels
-http://127.0.0.1:8000/api/hotel_reports/show?hotel_id=11&date_from=2021-10-01&date_to=2021-11-17   (11 is hotel_id from above API)
+
+http://127.0.0.1:8000/api/hotel_reports/show?hotel_id=11&date_from=2021-10-01&date_to=2021-11-17   
+(11 is hotel_id from above API)
 
