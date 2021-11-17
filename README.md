@@ -28,12 +28,12 @@ $ docker-compose up -d --build
 
 ### 4. Run composer install to install vendor libraries
 ```
-$ docker exec backend-php composer install
+$ docker exec vvly-backend-php composer install
 ```
 
 ### 5. Migrate DB and populate sample data
 ```
-$ docker exec -it backend-php bash
+$ docker exec -it vvly-backend-php bash
 $ bin/console doctrine:migrations:migrate
 $ bin/console doctrine:fixtures:load
 $ exit
@@ -45,7 +45,7 @@ I did setup the `/docker-entrypoint-initdb.d` inside `docker-composer.yaml` file
 but somehow it didn't work. I don't have time to look into it so we have 
 to login to db container to run it manually
 ```
-$docker exec -it mysql8 bash
+$docker exec -it vvly-backend-db bash
 $mysql -uroot -proot
 DROP DATABASE IF EXISTS analytic_test;
 CREATE DATABASE analytic_test CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
@@ -57,7 +57,7 @@ $exit
 
 ### 7. Run Unittest
 ```
-docker exec backend-php ./vendor/bin/phpunit
+docker exec vvly-backend-php ./vendor/bin/phpunit
 ```
 
 ### 8. Check API
