@@ -11,12 +11,10 @@ use App\Dto\Response\HotelDto;
 use App\Dto\Response\ReviewReportDto;
 use App\Dto\Response\Transformer\HotelDtoTransformer;
 use App\Dto\Response\Transformer\ReviewReportDtoTransformer;
-use App\Enum\ReportDateGroup;
 use App\Repository\HotelRepository;
 use App\Repository\ReviewRepository;
 use App\Utils\Constants;
 use App\Utils\DateTimeUtils;
-use DateInterval;
 use DateTime;
 
 class HotelReportService
@@ -107,6 +105,4 @@ class HotelReportService
 
         return $outputData;
     }
-
-
 }
