@@ -171,3 +171,11 @@ http://127.0.0.1:8000/api/hotel_reports/hotels
 http://127.0.0.1:8000/api/hotel_reports/show?hotel_id=11&date_from=2021-10-01&date_to=2021-11-17   
 (11 is hotel_id from above API)
 
+## PROBLEMS AND IMPROVEMENT
+* This is the first I make a project with Symfony so the code may not be clean. Please comment anything so I will refactor later.
+
+* Because the data from review table will become bigger along the time but rarely change the past data, so we can create a batch to calculate the review of hotel per day. Therefor, for each hotel we will have maximum: 10 year * 365 days = 3650 records. That's not too big.
+
+* Incase of Laravel, Tayler Otwell make a cool framework `laravel/octane` based on `Swoole` and `Loadrunner`, so I think we can use `Swoole` and `Loadrunner` to boot the booting time of Symfony framework.
+
+* I will write more Unit Test to cover the logic of application
