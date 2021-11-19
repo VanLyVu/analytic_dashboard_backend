@@ -1,5 +1,106 @@
 # Analytic Dashboard Backend
 
+## Design API
+
+### 1. API get hotel list
+
+#### Endpoint
+
+```
+GET:/api/hotel_reports/hotels
+```
+
+Depend on detail requirement we can move this api to `/api/hotels`
+
+#### Request
+```
+Nothing
+```
+
+#### Response
+```
+{
+    [
+        {
+            "id" : 1,
+            "name" : "Hotel 1"
+        },
+        {
+            "id" : 1,
+            "name" : "Hotel 1"
+        },
+    ]
+}
+```
+
+### 2. Get hotel review report
+
+#### Endpoint
+
+```
+GET:/api/hotel_reports/show
+```
+
+#### Request params
+```
+[
+    "hotel" : hotel_id,
+    "date_from" : Start date of report,
+    "date_to: : End date of report    
+]
+```
+
+#### Response 
+
+```
+{
+    "hotel_id" : 1,
+    "date_from" : "2021-03-04",
+    "date_to" : "2021-03-30",
+    "date_group" : "daily", // "weekly", or "monthly"
+    "review_dates" : [
+        {
+            "date" : "2021-03-04", // date|start date of week|start date of month
+            "review_count" : 140,
+            "average_score" : 87.00
+        },
+        {
+            "date" : "2021-03-05",
+            "review_count" : 57,
+            "average_score" : 90.50
+        }
+    ]
+}
+
+```
+
+## Database
+
+### table `hotel`
+
+```
+{
+    id: int,
+    name: varchar(255)
+}
+charset: utf8mb4
+data size: 1 ~ 10000
+```
+
+### tables `review`
+
+```
+{
+    id: int,
+    hotel_id: int, index
+    score: int (1 to 100),
+    comment: text,
+    created_date: datetime, index
+}
+charset: utf8mb4
+data size: 100 ~ 100000 per hotel
+```
+
 ## How to install and run backend
 
 **Assume that you are in folder that will contains the source code**
