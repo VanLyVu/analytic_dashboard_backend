@@ -179,3 +179,5 @@ http://127.0.0.1:8000/api/hotel_reports/show?hotel_id=11&date_from=2021-10-01&da
 * Incase of Laravel, Tayler Otwell make a cool framework `laravel/octane` based on `Swoole` and `Loadrunner`, so I think we can use `Swoole` and `Loadrunner` to boot the booting time of Symfony framework.
 
 * I will write more Unit Test to cover the logic of application
+
+* Integrate with Github Action to run CI for project

@@ -38,16 +38,15 @@ class ReviewRepository extends ServiceEntityRepository
                 'AVG(r.score) as average_score'
             )
             ->andWhere('r.hotel = :hotelId')
+            ->andWhere('r.created_date BETWEEN :startDate AND :endDate')
             ->setParameter('hotelId', $hotelReportFilterRequest->hotelId)
-            ->andWhere('r.created_date >= :startDate')
             ->setParameter('startDate', $hotelReportFilterRequest->dateFrom)
-            ->andWhere('r.created_date <= :endDate')
             ->setParameter('endDate', $hotelReportFilterRequest->dateTo)
             ->groupBy('r.hotel')
             ->addGroupBy('date')
             ->orderBy('date', 'ASC')
             ->getQuery();
-
+        
         $reviewDates = [];
 
         foreach ($query->toIterable() as $record) {
